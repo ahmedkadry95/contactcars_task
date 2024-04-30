@@ -1,5 +1,4 @@
 class Routes {
   static const String splash = '/';
-  static const String configuration = '/configuration';
-  static const String home = '/home';
+  static const String popularMovies = '/popular_movies';
 }
