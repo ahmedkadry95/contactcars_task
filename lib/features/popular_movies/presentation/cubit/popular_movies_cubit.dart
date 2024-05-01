@@ -15,7 +15,7 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
       di<GetPopularMoviesUseCase>();
 
   getPopularMovies({
-    int pageNumber = 1,
+    required int pageNumber,
     bool isNext = true,
   }) async {
     emit(PopularMoviesLoading());

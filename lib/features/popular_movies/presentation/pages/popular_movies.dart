@@ -1,15 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:contactcars_task/core/constants/strings/constant_strings.dart';
 import 'package:contactcars_task/core/di/di.dart';
 import 'package:contactcars_task/core/theming/buttons_styles.dart';
-import 'package:contactcars_task/core/theming/colors.dart';
 import 'package:contactcars_task/core/theming/styles.dart';
-import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
+import 'package:contactcars_task/core/utilis/spaces/spaces.dart';
 import 'package:contactcars_task/features/popular_movies/presentation/cubit/popular_movies_cubit.dart';
+import 'package:contactcars_task/features/popular_movies/presentation/widgets/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class PopularMovies extends StatefulWidget {
   const PopularMovies({super.key});
@@ -59,12 +56,8 @@ class _PopularMoviesState extends State<PopularMovies> {
               child: Text('Something went wrong!'),
             );
           } else if (state is NoCashedPopularMoviesExist) {
-            return Center(
-              child: Text(
-                state.message,
-                style: TextStyles.font22BoldSecondaryAppColor,
-                textAlign: TextAlign.center,
-              ),
+            return NoCashedPopularMoviesExistWidget(
+              message: state.message,
             );
           }
           return const Center(
@@ -72,6 +65,57 @@ class _PopularMoviesState extends State<PopularMovies> {
           );
         },
       ),
+    );
+  }
+}
+
+class NoCashedPopularMoviesExistWidget extends StatelessWidget {
+  String message;
+  PopularMoviesCubit cubit = di<PopularMoviesCubit>();
+
+  NoCashedPopularMoviesExistWidget({
+    super.key,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    print('${cubit.pageNumber} cubit.pageNumber');
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: Text(
+            message,
+            style: TextStyles.font22SemiBoldBlack,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        heightSpace(20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            if (cubit.pageNumber != 1)
+              ElevatedButton(
+                onPressed: () {
+                  cubit.getPopularMovies(
+                    isNext: false,
+                    pageNumber: cubit.pageNumber - 1,
+                  );
+                },
+                style: mainAppButtonStyle,
+                child: const Text('Previous'),
+              ),
+            ElevatedButton(
+              onPressed: () {
+                cubit.getPopularMovies(pageNumber: cubit.pageNumber);
+              },
+              style: mainAppButtonStyle,
+              child: const Text('Try Again'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -101,8 +145,8 @@ class PopularMoviesButtons extends StatelessWidget {
               style: mainAppButtonStyle,
               onPressed: () {
                 cubit.getPopularMovies(
-                  pageNumber: cubit.pageNumber - 1,
                   isNext: false,
+                  pageNumber: cubit.pageNumber - 1,
                 );
               },
               child: const Text('Previous'),
@@ -110,81 +154,9 @@ class PopularMoviesButtons extends StatelessWidget {
           ElevatedButton(
             style: mainAppButtonStyle,
             onPressed: () {
-              cubit.getPopularMovies(
-                pageNumber: cubit.pageNumber + 1,
-              );
+              cubit.getPopularMovies(pageNumber: cubit.pageNumber + 1);
             },
             child: const Text('Next'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-////////////////////////////        MovieCard        ////////////////////////////
-////////////////////////////        MovieCard        ////////////////////////////
-////////////////////////////        MovieCard        ////////////////////////////
-////////////////////////////        MovieCard        ////////////////////////////
-
-class MovieCard extends StatelessWidget {
-  final Movie movie;
-
-  const MovieCard({super.key, required this.movie});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: ColorsManager.white,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          CachedNetworkImage(
-            width: 100.sp,
-            height: 120.sp,
-            imageUrl: AppStrings.imageBaseUrl + movie.posterPath,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            placeholder: (context, url) => SizedBox(
-              width: 100.sp,
-              height: 120.sp,
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-            errorWidget: (context, url, error) => SizedBox(
-              width: 100.sp,
-              height: 120.sp,
-              child: const Center(child: Icon(Icons.error)),
-            ),
-          ),
-          Expanded(
-            child: ListTile(
-              title: Text(
-                movie.title,
-                style: TextStyles.font20BoldSecondaryAppColor,
-              ),
-              subtitle: Text(
-                movie.releaseDate,
-              ),
-              trailing: CircularPercentIndicator(
-                radius: 15.0,
-                lineWidth: 2.0,
-                percent: movie.voteAverage / 10,
-                center: Text(
-                  '${(movie.voteAverage / 10 * 100).round()}',
-                ),
-                progressColor: Colors.green,
-              ),
-            ),
           ),
         ],
       ),
