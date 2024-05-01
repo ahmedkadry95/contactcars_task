@@ -4,21 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextStyles {
-  static TextStyle font24BlackBold = TextStyle(
-    fontSize: 24.sp,
+  static TextStyle font22BoldSecondaryAppColor = TextStyle(
+    fontSize: 22.sp,
     fontWeight: FontWeightHelper.bold,
-    color: Colors.black,
+    color: ColorsManager.secondaryAppColor,
+  );
+  static TextStyle font20BoldSecondaryAppColor = TextStyle(
+    fontSize: 20.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: ColorsManager.secondaryAppColor,
   );
 
-  static TextStyle font32BlueBold = TextStyle(
-    fontSize: 32.sp,
-    fontWeight: FontWeightHelper.bold,
-    color: ColorsManager.mainColor,
-  );
-
-  static TextStyle font13BlueSemiBold = TextStyle(
-    fontSize: 13.sp,
+  static TextStyle font16SimiBoldSecondaryAppColor = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeightHelper.semiBold,
-    color: ColorsManager.mainColor,
+    color: ColorsManager.secondaryAppColor,
   );
 }

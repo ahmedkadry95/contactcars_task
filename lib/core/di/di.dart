@@ -25,7 +25,7 @@ Future<void> setupDependencyInjection() async {
       PopularMoviesRepositoriesImpl());
 
   /// popular movies use cases
-  di.registerSingleton<GetPopularMoviesUseCase>(GetPopularMoviesUseCase(di()));
+  di.registerSingleton<GetPopularMoviesUseCase>(GetPopularMoviesUseCase());
 
   /// popular movies cubit
   di.registerSingleton<PopularMoviesCubit>(PopularMoviesCubit());

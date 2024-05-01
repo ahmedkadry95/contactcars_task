@@ -52,7 +52,6 @@ class ApiHelper {
 
   Future<Either<Failure, T>> handleRepoFunction<T>({
     required Function() onTry,
-    required Function() onOffline,
   }) async {
     if (await networkChecker.isConnected) {
       try {
@@ -61,11 +60,7 @@ class ApiHelper {
         return Left(ServerFailure());
       }
     } else {
-      try {
-        return Right(await onOffline());
-      } on EmptyCashException {
-        return Left(EmptyCacheFailure());
-      }
+      return Left(OfflineFailure());
     }
   }
 }

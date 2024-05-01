@@ -10,20 +10,29 @@ part 'popular_movies_state.dart';
 
 class PopularMoviesCubit extends Cubit<PopularMoviesState> {
   PopularMoviesCubit() : super(PopularMoviesLoading());
+  int pageNumber = 0;
   GetPopularMoviesUseCase getPopularMoviesUseCase =
       di<GetPopularMoviesUseCase>();
 
-  getPopularMovies({required int pageNumber}) async {
-    var response = await getPopularMoviesUseCase.call(pageNumber: pageNumber);
+  getPopularMovies({
+    int pageNumber = 1,
+    bool isNext = true,
+  }) async {
+    emit(PopularMoviesLoading());
+    var response = await getPopularMoviesUseCase.call(
+      pageNumber: pageNumber,
+    );
     response.fold(
       (failure) {
         if (failure is EmptyCacheFailure) {
-          emit(NoCashedPopularMoviesExist());
+          emit(NoCashedPopularMoviesExist(message: getErrorMessage(failure)));
         } else {
           emit(PopularMoviesLoadedFailed(message: getErrorMessage(failure)));
         }
       },
       (movies) {
+        isNext ? this.pageNumber++ : this.pageNumber--;
+
         emit(PopularMoviesLoadedSuccessfully(movies: movies));
       },
     );

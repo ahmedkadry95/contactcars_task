@@ -21,16 +21,16 @@ class EmptyCacheFailure extends Failure {
   List<Object?> get props => [];
 }
 
+// getErrorMessage method to get the error message based on the failure type
 String getErrorMessage(Failure failure) {
   switch (failure.runtimeType) {
-    case ServerFailure _:
+    case const (ServerFailure):
       return AppStrings.serverFailure;
-    case OfflineFailure _:
+    case const (OfflineFailure):
       return AppStrings.offlineFailure;
-    case EmptyCacheFailure _:
-      return 'Network Failure';
-
+    case const (EmptyCacheFailure):
+      return AppStrings.emptyCacheFailure;
     default:
-      return 'Unexpected Error';
+      return AppStrings.unExpectedError;
   }
 }

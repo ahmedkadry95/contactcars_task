@@ -1,4 +1,5 @@
 import 'package:contactcars_task/core/routing/app_router.dart';
+import 'package:contactcars_task/core/theming/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,7 +17,15 @@ class DocApp extends StatelessWidget {
       minTextAdapt: true,
       child: MaterialApp(
         title: 'Contact Cars Task',
-        theme: ThemeData(),
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            surfaceTintColor: ColorsManager.mainColor,
+            elevation: 0,
+          ),
+          progressIndicatorTheme: const ProgressIndicatorThemeData(
+            color: ColorsManager.mainColor,
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         initialRoute: Routes.splash,
         onGenerateRoute: appRouter.onGenerateRoute,

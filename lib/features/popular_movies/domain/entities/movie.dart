@@ -7,10 +7,13 @@ class Movie extends HiveObject {
   final String releaseDate;
   @HiveField(2)
   final String posterPath;
+  @HiveField(3)
+  final double voteAverage;
 
   Movie({
     required this.title,
     required this.releaseDate,
     required this.posterPath,
+    required this.voteAverage,
   });
 }

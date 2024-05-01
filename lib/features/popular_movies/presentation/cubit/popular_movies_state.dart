@@ -32,7 +32,9 @@ class PopularMoviesLoadedFailed extends PopularMoviesState {
 
 /// this state will be emitted when data loaded failed
 class NoCashedPopularMoviesExist extends PopularMoviesState {
+  final String message;
+
+  NoCashedPopularMoviesExist({required this.message});
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
