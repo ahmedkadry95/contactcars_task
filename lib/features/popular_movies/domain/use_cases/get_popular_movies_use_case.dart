@@ -10,10 +10,11 @@ class GetPopularMoviesUseCase {
 
   Future<Either<Failure, List<Movie>>> call({
     required int pageNumber,
+    required bool isNext,
   }) async {
     return await repository.getPopularMovies(
       pageNumber: pageNumber,
-
+      isNext: isNext,
     );
   }
 }

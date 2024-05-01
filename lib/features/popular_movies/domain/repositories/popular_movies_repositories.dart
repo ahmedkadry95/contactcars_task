@@ -3,5 +3,8 @@ import 'package:contactcars_task/features/popular_movies/domain/entities/movie.d
 import 'package:dartz/dartz.dart';
 
 abstract class PopularMoviesRepositories {
-  Future<Either<Failure, List<Movie>>> getPopularMovies({required int pageNumber});
+  Future<Either<Failure, List<Movie>>> getPopularMovies({
+    required int pageNumber,
+    required bool isNext,
+  });
 }

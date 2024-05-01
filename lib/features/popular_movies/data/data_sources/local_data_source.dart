@@ -21,13 +21,16 @@ class LocalDataSourceImpl implements PopularMoviesLocalDataSource {
   Future<List<MovieModel>> getCashedPopularMovies({
     required int pageNumber,
   }) async {
-    int endIndex = pageNumber + 10;
+    int startIndex = (pageNumber - 1) * 20;
+    int endIndex = startIndex + 20;
     if (endIndex > popularMoviesBox!.length) {
       endIndex = popularMoviesBox!.length;
     }
     List<MovieModel> movies = [];
-    for (int i = pageNumber; i < endIndex; i++) {
-      MovieModel movie = await popularMoviesBox!.getAt(i);
+    for (int i = startIndex; i < endIndex; i++) {
+      var movieJson =
+          hiveObjectConvertorToMAp(await popularMoviesBox!.getAt(i));
+      MovieModel movie = MovieModel.fromJson(movieJson);
       movies.add(movie);
     }
     return Future.value(movies);
@@ -37,8 +40,23 @@ class LocalDataSourceImpl implements PopularMoviesLocalDataSource {
   Future<Unit> cashMovies({
     required List<MovieModel> movies,
   }) async {
-    await popularMoviesBox
-        ?.addAll(movies.map((movie) => movie.toJson()).toList());
+    for (MovieModel movie in movies) {
+      bool isExist = popularMoviesBox!.containsKey(movie.id);
+      if (!isExist) {
+        await popularMoviesBox?.put(
+          movie.id,
+          movie.toJson(),
+        );
+      }
+    }
     return Future.value(unit);
   }
+}
+
+Map<String, dynamic> hiveObjectConvertorToMAp(dynamic hiveObject) {
+  Map<String, dynamic> map = {};
+  for (var key in hiveObject.keys) {
+    map[key.toString()] = hiveObject[key]; // Convert keys to strings
+  }
+  return map;
 }

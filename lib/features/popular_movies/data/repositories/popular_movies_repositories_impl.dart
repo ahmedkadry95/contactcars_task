@@ -20,12 +20,15 @@ class PopularMoviesRepositoriesImpl implements PopularMoviesRepositories {
   @override
   Future<Either<Failure, List<MovieModel>>> getPopularMovies({
     required int pageNumber,
+    required bool isNext,
   }) async {
-    if (await networkChecker.isConnected) {
+    if (await networkChecker.isConnected & isNext) {
       try {
         final movies =
             await remoteDataSourceImpl.getPopularMovies(pageNumber: pageNumber);
-        localDataSource.cashMovies(movies: movies);
+        await localDataSource.cashMovies(
+          movies: movies,
+        );
         return Right(movies);
       } on ServerException {
         return Left(ServerFailure());
@@ -41,6 +44,8 @@ class PopularMoviesRepositoriesImpl implements PopularMoviesRepositories {
         return Right(movies);
       } on EmptyCashException {
         return Left(EmptyCacheFailure());
+      } catch (e) {
+        return Left(ServerFailure());
       }
     }
   }

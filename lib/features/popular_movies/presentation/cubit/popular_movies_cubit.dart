@@ -21,6 +21,7 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
     emit(PopularMoviesLoading());
     var response = await getPopularMoviesUseCase.call(
       pageNumber: pageNumber,
+      isNext: isNext,
     );
     response.fold(
       (failure) {
