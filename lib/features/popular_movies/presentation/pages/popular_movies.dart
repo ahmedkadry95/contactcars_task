@@ -22,7 +22,7 @@ class _PopularMoviesState extends State<PopularMovies> {
   @override
   void initState() {
     super.initState();
-     cubit.getPopularMovies(pageNumber: 1);
+    cubit.getPopularMovies(pageNumber: 1);
   }
 
   @override

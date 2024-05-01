@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:contactcars_task/core/constants/strings/constant_strings.dart';
+import 'package:contactcars_task/core/extensions/on_tap/on_tap.dart';
+import 'package:contactcars_task/core/routing/navigation.dart';
+import 'package:contactcars_task/core/routing/routs.dart';
 import 'package:contactcars_task/core/theming/colors.dart';
 import 'package:contactcars_task/core/theming/styles.dart';
 import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
@@ -22,27 +25,30 @@ class MovieCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CachedNetworkImage(
-            width: 90.sp,
-            height: 110.sp,
-            imageUrl: AppStrings.imageBaseUrl + movie.posterPath,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fill,
+          Hero(
+            tag: 'poster${movie.id}',
+            child: CachedNetworkImage(
+              width: 90.sp,
+              height: 110.sp,
+              imageUrl: AppStrings.imageBaseUrl + movie.posterPath,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-            placeholder: (context, url) => SizedBox(
-              width: 100.sp,
-              height: 120.sp,
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-            errorWidget: (context, url, error) => SizedBox(
-              width: 100.sp,
-              height: 120.sp,
-              child: const Center(child: Icon(Icons.error)),
+              placeholder: (context, url) => SizedBox(
+                width: 100.sp,
+                height: 120.sp,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) => SizedBox(
+                width: 100.sp,
+                height: 120.sp,
+                child: const Center(child: Icon(Icons.error)),
+              ),
             ),
           ),
           Expanded(
@@ -60,7 +66,12 @@ class MovieCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ).onTap(() {
+        context.pushWithNamed(
+          Routes.movieDetails,
+          arguments: movie,
+        );
+      }, borderRadius: BorderRadius.circular(10)),
     );
   }
 }

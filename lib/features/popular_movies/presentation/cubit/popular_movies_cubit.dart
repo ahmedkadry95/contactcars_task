@@ -45,7 +45,10 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
 
   checkInternetConnection(BuildContext context) async {
     if (await networkChecker.isConnected) {
-      getPopularMovies(pageNumber: pageNumber, isNext: true);
+      getPopularMovies(
+        pageNumber: pageNumber == 0 ? 1 : pageNumber,
+        isNext: true,
+      );
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();

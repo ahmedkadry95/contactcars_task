@@ -11,6 +11,12 @@ class Movie extends HiveObject {
   final String posterPath;
   @HiveField(4)
   final double voteAverage;
+  @HiveField(5)
+  final String overview;
+  @HiveField(6)
+  final List<int> genreIds;
+  @HiveField(7)
+  final String backdropPath;
 
   Movie({
     required this.title,
@@ -18,5 +24,8 @@ class Movie extends HiveObject {
     required this.posterPath,
     required this.voteAverage,
     required this.id,
+    required this.overview,
+    required this.genreIds,
+    required this.backdropPath,
   });
 }

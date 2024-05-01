@@ -7,6 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TextStyles {
   static TextStyle font20SemiBoldBlack = TextStyle(
     fontSize: 20.sp,
+    fontWeight: FontWeightHelper.extraBold,
+    color: ColorsManager.black,
+    fontFamily: AppStrings.enFontFamily,
+  );
+  static TextStyle font15SemiBoldBlack = TextStyle(
+    fontSize: 15.sp,
     fontWeight: FontWeightHelper.bold,
     color: ColorsManager.black,
     fontFamily: AppStrings.enFontFamily,
@@ -22,6 +28,12 @@ class TextStyles {
     fontSize: 13.sp,
     fontWeight: FontWeightHelper.semiBold,
     color: ColorsManager.grey,
+    fontFamily: AppStrings.enFontFamily,
+  );
+  static TextStyle font13SemiBoldBlack = TextStyle(
+    fontSize: 13.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: ColorsManager.black,
     fontFamily: AppStrings.enFontFamily,
   );
 }
