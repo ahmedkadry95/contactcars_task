@@ -1,3 +1,4 @@
+import 'package:contactcars_task/core/constants/strings/constant_strings.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {}
@@ -18,4 +19,18 @@ class ServerFailure extends Failure {
 class EmptyCacheFailure extends Failure {
   @override
   List<Object?> get props => [];
+}
+
+String getErrorMessage(Failure failure) {
+  switch (failure.runtimeType) {
+    case ServerFailure _:
+      return AppStrings.serverFailure;
+    case OfflineFailure _:
+      return AppStrings.offlineFailure;
+    case EmptyCacheFailure _:
+      return 'Network Failure';
+
+    default:
+      return 'Unexpected Error';
+  }
 }

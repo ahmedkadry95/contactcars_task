@@ -4,7 +4,7 @@ import 'package:contactcars_task/features/popular_movies/data/models/movie_model
 
 abstract class PopularMoviesRemoteDataSource {
   Future<List<MovieModel>> getPopularMovies({
-    required int page,
+    required int pageNumber,
   });
 }
 
@@ -15,10 +15,10 @@ class RemoteDataSourceImpl implements PopularMoviesRemoteDataSource {
 
   @override
   Future<List<MovieModel>> getPopularMovies({
-    required int page,
+    required int pageNumber,
   }) async {
     return apiHelper.handleDataSourceRequest(
-      onTry: () => apiHelper.dio.get('popular?language=en-US&page=$page'),
+      onTry: () => apiHelper.dio.get('popular?language=en-US&page=$pageNumber'),
       onSuccess: (response) => (response.data['results'] as List)
           .map<MovieModel>((json) => MovieModel.fromJson(json))
           .toList(),

@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 
 abstract class PopularMoviesLocalDataSource {
   Future<List<MovieModel>> getCashedPopularMovies({
-    required int startIndex,
+    required int pageNumber,
   });
 
   Future<Unit> cashMovies({
@@ -16,17 +16,17 @@ abstract class PopularMoviesLocalDataSource {
 /// A class that implements the [PopularMoviesLocalDataSource] abstract class.
 ///
 
-class RemoteDataSourceImpl implements PopularMoviesLocalDataSource {
+class LocalDataSourceImpl implements PopularMoviesLocalDataSource {
   @override
   Future<List<MovieModel>> getCashedPopularMovies({
-    int startIndex = 0,
+    required int pageNumber,
   }) async {
-    int endIndex = startIndex + 10;
+    int endIndex = pageNumber + 10;
     if (endIndex > popularMoviesBox!.length) {
       endIndex = popularMoviesBox!.length;
     }
     List<MovieModel> movies = [];
-    for (int i = startIndex; i < endIndex; i++) {
+    for (int i = pageNumber; i < endIndex; i++) {
       MovieModel movie = await popularMoviesBox!.getAt(i);
       movies.add(movie);
     }

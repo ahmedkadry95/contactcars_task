@@ -12,16 +12,12 @@ class AppRouter {
       case Routes.splash:
         return MaterialPageRoute(
           builder: (_) => const Splash(),
-          //   BlocProvider(
-          //   create: (context) => SplashCubit(),
-          //   child: Splash(),
-          // ),
         );
       case Routes.popularMovies:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => di<PopularMoviesCubit>(),
-            child: const PopularMovies(),
+            child: PopularMovies(),
           ),
         );
       default:
