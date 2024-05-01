@@ -1,16 +1,21 @@
-abstract class Failure {}
+import 'package:equatable/equatable.dart';
+
+abstract class Failure extends Equatable {}
 
 // No internet connection
-class OfflineFailure extends Failure {}
+class OfflineFailure extends Failure {
+  @override
+  List<Object?> get props => [];
+}
 
 // Server Error (api doesn't return data from server)
-class ServerFailure extends Failure {}
-
-// Validation
-class ValidationFailure extends Failure {}
-
-// Unauthorized
-class UnauthorizedFailure extends Failure {}
+class ServerFailure extends Failure {
+  @override
+  List<Object?> get props => [];
+}
 
 // Empty cash exception
-class EmptyCacheFailure extends Failure {}
+class EmptyCacheFailure extends Failure {
+  @override
+  List<Object?> get props => [];
+}
