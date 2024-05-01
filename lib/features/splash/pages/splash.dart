@@ -20,7 +20,7 @@ class Splash extends StatelessWidget {
         curve: Curves.easeInOut,
         nextRoute: Routes.popularMovies,
         splash: const SplashLogo(),
-        nextScreen: const PopularMovies(),
+        nextScreen: PopularMovies(),
         // nextScreen: _getNextScreen(),
       ),
     );
