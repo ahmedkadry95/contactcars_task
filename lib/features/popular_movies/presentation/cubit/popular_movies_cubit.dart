@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:contactcars_task/core/di/di.dart';
 import 'package:contactcars_task/core/networking/failure.dart';
+import 'package:contactcars_task/core/networking/network_checker.dart';
 import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
 import 'package:contactcars_task/features/popular_movies/domain/use_cases/get_popular_movies_use_case.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 part 'popular_movies_state.dart';
 
@@ -13,6 +15,8 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
   int pageNumber = 0;
   GetPopularMoviesUseCase getPopularMoviesUseCase =
       di<GetPopularMoviesUseCase>();
+  NetworkChecker networkChecker =
+      NetworkCheckerImpl(connectionChecker: InternetConnectionChecker());
 
   getPopularMovies({
     required int pageNumber,
@@ -37,5 +41,18 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
         emit(PopularMoviesLoadedSuccessfully(movies: movies));
       },
     );
+  }
+
+  checkInternetConnection(BuildContext context) async {
+    if (await networkChecker.isConnected) {
+      getPopularMovies(pageNumber: pageNumber, isNext: true);
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('No internet connection!'),
+        ));
+      }
+    }
   }
 }

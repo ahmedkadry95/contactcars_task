@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TextStyles {
   static TextStyle font20SemiBoldBlack = TextStyle(
     fontSize: 20.sp,
-    fontWeight: FontWeightHelper.light,
+    fontWeight: FontWeightHelper.bold,
     color: ColorsManager.black,
     fontFamily: AppStrings.enFontFamily,
   );

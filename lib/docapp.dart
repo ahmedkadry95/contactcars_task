@@ -1,8 +1,6 @@
 import 'package:contactcars_task/core/constants/strings/constant_strings.dart';
 import 'package:contactcars_task/core/routing/app_router.dart';
 import 'package:contactcars_task/core/theming/colors.dart';
-import 'package:contactcars_task/core/theming/font_weight_helper.dart';
-import 'package:contactcars_task/core/theming/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,13 +19,14 @@ class DocApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Contact Cars Task',
         theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            surfaceTintColor: ColorsManager.mainColor,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
             elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
             titleTextStyle: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeightHelper.light,
-              color: ColorsManager.black,
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
               fontFamily: AppStrings.enFontFamily,
             ),
           ),

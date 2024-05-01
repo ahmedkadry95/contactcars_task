@@ -1,9 +1,10 @@
 import 'package:contactcars_task/core/di/di.dart';
-import 'package:contactcars_task/core/theming/buttons_styles.dart';
-import 'package:contactcars_task/core/theming/styles.dart';
 import 'package:contactcars_task/core/utilis/spaces/spaces.dart';
 import 'package:contactcars_task/features/popular_movies/presentation/cubit/popular_movies_cubit.dart';
 import 'package:contactcars_task/features/popular_movies/presentation/widgets/movie_card.dart';
+import 'package:contactcars_task/features/popular_movies/presentation/widgets/no_cashed_popular_movie_exsit.dart';
+import 'package:contactcars_task/features/popular_movies/presentation/widgets/popular_movies_buttons.dart';
+import 'package:contactcars_task/features/popular_movies/presentation/widgets/some_thing_went_wrong_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,13 +17,12 @@ class PopularMovies extends StatefulWidget {
 }
 
 class _PopularMoviesState extends State<PopularMovies> {
-  late PopularMoviesCubit cubit;
+  PopularMoviesCubit cubit = di<PopularMoviesCubit>();
 
   @override
   void initState() {
     super.initState();
-    cubit = di<PopularMoviesCubit>();
-    cubit.getPopularMovies(pageNumber: 1);
+     cubit.getPopularMovies(pageNumber: 1);
   }
 
   @override
@@ -53,117 +53,14 @@ class _PopularMoviesState extends State<PopularMovies> {
               ],
             );
           } else if (state is PopularMoviesLoadedFailed) {
-            return const Center(
-              child: Text('Something went wrong!'),
-            );
+            return UnkownErrorWidget();
           } else if (state is NoCashedPopularMoviesExist) {
             return NoCashedPopularMoviesExistWidget(
               message: state.message,
             );
           }
-          return const Center(
-            child: Text('Something went wrong!'),
-          );
+          return UnkownErrorWidget();
         },
-      ),
-    );
-  }
-}
-
-class NoCashedPopularMoviesExistWidget extends StatelessWidget {
-  String message;
-  PopularMoviesCubit cubit = di<PopularMoviesCubit>();
-
-  NoCashedPopularMoviesExistWidget({
-    super.key,
-    required this.message,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    print('${cubit.pageNumber} cubit.pageNumber');
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(
-          child: Text(
-            message,
-            style: TextStyles.font20SemiBoldBlack,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        heightSpace(20.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            if (cubit.pageNumber != 1)
-              ElevatedButton(
-                onPressed: () {
-                  cubit.getPopularMovies(
-                    isNext: false,
-                    pageNumber: cubit.pageNumber - 1,
-                  );
-                },
-                style: mainAppButtonStyle(context: context),
-                child: const Text('Previous'),
-              ),
-            ElevatedButton(
-              onPressed: () {
-                cubit.getPopularMovies(pageNumber: cubit.pageNumber);
-              },
-              style: mainAppButtonStyle(context: context),
-              child: const Text('Try Again'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-////////////////////////////    Popular Movies Buttons          ////////////////////////////
-////////////////////////////    Popular Movies Buttons          ////////////////////////////
-////////////////////////////    Popular Movies Buttons          ////////////////////////////
-////////////////////////////    Popular Movies Buttons          ////////////////////////////
-
-class PopularMoviesButtons extends StatelessWidget {
-  const PopularMoviesButtons({
-    super.key,
-    required this.cubit,
-  });
-
-  final PopularMoviesCubit cubit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          if (cubit.pageNumber > 1)
-            ElevatedButton(
-              style: mainAppButtonStyle(context: context),
-              onPressed: () {
-                cubit.getPopularMovies(
-                  isNext: false,
-                  pageNumber: cubit.pageNumber - 1,
-                );
-              },
-              child: const Text('Previous'),
-            ),
-          Text(
-            cubit.pageNumber.toString(),
-            style: TextStyles.font15BoldMainColor,
-          ),
-          ElevatedButton(
-            style: mainAppButtonStyle(context: context),
-            onPressed: () {
-              cubit.getPopularMovies(pageNumber: cubit.pageNumber + 1);
-            },
-            child: const Text('Next'),
-          ),
-        ],
       ),
     );
   }
