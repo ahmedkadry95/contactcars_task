@@ -49,7 +49,7 @@ class MovieCard extends StatelessWidget {
             child: ListTile(
               title: Text(
                 movie.title,
-                style: TextStyles.font15BoldBlack,
+                style: TextStyles.font15BoldMainColor,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -48,7 +48,8 @@ class _PopularMoviesState extends State<PopularMovies> {
                     },
                   ),
                 ),
-                PopularMoviesButtons(cubit: cubit)
+                PopularMoviesButtons(cubit: cubit),
+                heightSpace(20.sp)
               ],
             );
           } else if (state is PopularMoviesLoadedFailed) {
@@ -87,7 +88,7 @@ class NoCashedPopularMoviesExistWidget extends StatelessWidget {
         Center(
           child: Text(
             message,
-            style: TextStyles.font22SemiBoldBlack,
+            style: TextStyles.font20SemiBoldBlack,
             textAlign: TextAlign.center,
           ),
         ),
@@ -103,14 +104,14 @@ class NoCashedPopularMoviesExistWidget extends StatelessWidget {
                     pageNumber: cubit.pageNumber - 1,
                   );
                 },
-                style: mainAppButtonStyle,
+                style: mainAppButtonStyle(context: context),
                 child: const Text('Previous'),
               ),
             ElevatedButton(
               onPressed: () {
                 cubit.getPopularMovies(pageNumber: cubit.pageNumber);
               },
-              style: mainAppButtonStyle,
+              style: mainAppButtonStyle(context: context),
               child: const Text('Try Again'),
             ),
           ],
@@ -142,7 +143,7 @@ class PopularMoviesButtons extends StatelessWidget {
         children: [
           if (cubit.pageNumber > 1)
             ElevatedButton(
-              style: mainAppButtonStyle,
+              style: mainAppButtonStyle(context: context),
               onPressed: () {
                 cubit.getPopularMovies(
                   isNext: false,
@@ -151,8 +152,12 @@ class PopularMoviesButtons extends StatelessWidget {
               },
               child: const Text('Previous'),
             ),
+          Text(
+            cubit.pageNumber.toString(),
+            style: TextStyles.font15BoldMainColor,
+          ),
           ElevatedButton(
-            style: mainAppButtonStyle,
+            style: mainAppButtonStyle(context: context),
             onPressed: () {
               cubit.getPopularMovies(pageNumber: cubit.pageNumber + 1);
             },

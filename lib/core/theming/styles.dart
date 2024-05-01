@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextStyles {
-  static TextStyle font22SemiBoldBlack = TextStyle(
-    fontSize: 16.sp,
+  static TextStyle font20SemiBoldBlack = TextStyle(
+    fontSize: 20.sp,
     fontWeight: FontWeightHelper.light,
     color: ColorsManager.black,
     fontFamily: AppStrings.enFontFamily,
   );
-  static TextStyle font15BoldBlack = TextStyle(
+  static TextStyle font15BoldMainColor = TextStyle(
     fontSize: 15.sp,
     fontWeight: FontWeightHelper.bold,
     color: ColorsManager.secondaryAppColor,
