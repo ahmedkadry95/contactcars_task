@@ -1,16 +1,24 @@
 import 'package:contactcars_task/core/networking/exception.dart';
 import 'package:contactcars_task/core/networking/failure.dart';
+import 'package:contactcars_task/core/networking/network_checker.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-
-String errorMessage = '';
 
 class ApiHelper {
   late final Dio dio;
+  NetworkChecker networkChecker =
+      NetworkCheckerImpl(connectionChecker: InternetConnectionChecker());
 
   ApiHelper() {
     dio = Dio();
+    dio.options.baseUrl = 'https://api.themoviedb.org/3/';
+    dio.options.headers = {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MGRhZmEyNDk3OWEzZTdlYTRlYjQ2NDgzMzFhYzRkYiIsInN1YiI6IjY2MzAwZWYyNjA5NzUwMDEyYmRhZmUxMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-eUkIgQTGm8I5n4rJhs04kAlQSo1jGTl_5uego7cfXI',
+      'accept': 'application/json'
+    };
     dio.options.connectTimeout = const Duration(seconds: 20);
     dio.options.receiveTimeout = const Duration(seconds: 20);
     dio.interceptors.add(
@@ -32,14 +40,8 @@ class ApiHelper {
   }) async {
     try {
       final Response response = await onTry();
-      if (response.statusCode == 200 ||
-          response.statusCode == 201 ||
-          response.statusCode == 204) {
+      if (response.statusCode == 200) {
         return onSuccess(response);
-      } else if (response.statusCode == 401) {
-        throw UnauthorizedException();
-      } else if (response.statusCode == 422 || response.statusCode == 400) {
-        throw ValidationException();
       } else {
         throw ServerException();
       }
@@ -48,17 +50,17 @@ class ApiHelper {
     }
   }
 
-  static Future<Either<Failure, T>> handleRepoFunction<T>({
+  Future<Either<Failure, T>> handleRepoFunction<T>({
     required Function() onTry,
   }) async {
-    try {
-      return Right(await onTry());
-    } on ValidationException {
-      return Left(ValidationFailure());
-    } on UnauthorizedException {
-      return Left(UnauthorizedFailure());
-    } on ServerException {
-      return Left(ServerFailure());
+    if (await networkChecker.isConnected) {
+      try {
+        return Right(await onTry());
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(OfflineFailure());
     }
   }
 }
