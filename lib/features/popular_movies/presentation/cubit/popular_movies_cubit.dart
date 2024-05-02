@@ -49,7 +49,11 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
         }
       },
       (movies) async {
-        isNext ? this.pageNumber++ : this.pageNumber--;
+        isNext
+            ? this.pageNumber++
+            : this.pageNumber == 1
+                ? this.pageNumber
+                : this.pageNumber--;
         await getGenres();
         emit(PopularMoviesLoadedSuccessfully(movies: movies));
       },
