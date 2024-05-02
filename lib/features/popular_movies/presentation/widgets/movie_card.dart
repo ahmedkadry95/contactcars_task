@@ -22,6 +22,8 @@ class MovieCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         color: ColorsManager.white,
+        elevation: 3,
+        surfaceTintColor: ColorsManager.mainColor,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
         shape: RoundedRectangleBorder(
