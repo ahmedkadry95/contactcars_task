@@ -1,3 +1,4 @@
+import 'package:contactcars_task/core/constants/strings/constant_strings.dart';
 import 'package:contactcars_task/core/routing/app_router.dart';
 import 'package:contactcars_task/core/theming/colors.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,15 @@ class DocApp extends StatelessWidget {
         title: 'Contact Cars Task',
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
-            surfaceTintColor: ColorsManager.mainColor,
+            backgroundColor: Colors.white,
             elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              fontFamily: AppStrings.enFontFamily,
+            ),
           ),
           progressIndicatorTheme: const ProgressIndicatorThemeData(
             color: ColorsManager.mainColor,
