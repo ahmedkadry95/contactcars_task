@@ -1,5 +1,8 @@
+import 'package:contactcars_task/core/helper_functions/hive_object_convertor_to_map.dart';
 import 'package:contactcars_task/core/services/hive/hive.dart';
+import 'package:contactcars_task/features/popular_movies/data/models/genre_model.dart';
 import 'package:contactcars_task/features/popular_movies/data/models/movie_model.dart';
+import 'package:contactcars_task/features/popular_movies/domain/entities/genre.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class PopularMoviesLocalDataSource {
@@ -10,6 +13,10 @@ abstract class PopularMoviesLocalDataSource {
   Future<Unit> cashMovies({
     required List<MovieModel> movies,
   });
+
+  Future<List<Genre>> getGenres();
+
+  Future<Unit> cashGenres(List<GenresModel> genres);
 }
 
 ///
@@ -29,7 +36,7 @@ class LocalDataSourceImpl implements PopularMoviesLocalDataSource {
     List<MovieModel> movies = [];
     for (int i = startIndex; i < endIndex; i++) {
       var movieJson =
-          hiveObjectConvertorToMAp(await popularMoviesBox!.getAt(i));
+      hiveObjectConvertorToMap(await popularMoviesBox!.getAt(i));
       MovieModel movie = MovieModel.fromJson(movieJson);
       movies.add(movie);
     }
@@ -51,12 +58,30 @@ class LocalDataSourceImpl implements PopularMoviesLocalDataSource {
     }
     return Future.value(unit);
   }
+
+  @override
+  Future<List<Genre>> getGenres() async {
+    List<GenresModel> genres = [];
+    for (var element in genresBox!.values) {
+      var genreJson = hiveObjectConvertorToMap(element);
+      GenresModel genre = GenresModel.fromJson(genreJson);
+      genres.add(genre);
+    }
+    return Future.value(genres);
+  }
+
+  @override
+  Future<Unit> cashGenres(List<GenresModel> genres) async {
+    for (GenresModel genre in genres) {
+      bool isExist = genresBox!.containsKey(genre.id);
+      if (!isExist) {
+        await genresBox?.put(
+          genre.id,
+          genre.toJson(),
+        );
+      }
+    }
+    return Future.value(unit);
+  }
 }
 
-Map<String, dynamic> hiveObjectConvertorToMAp(dynamic hiveObject) {
-  Map<String, dynamic> map = {};
-  for (var key in hiveObject.keys) {
-    map[key.toString()] = hiveObject[key]; // Convert keys to strings
-  }
-  return map;
-}

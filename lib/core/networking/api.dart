@@ -13,7 +13,7 @@ class ApiHelper {
 
   ApiHelper() {
     dio = Dio();
-    dio.options.baseUrl = 'https://api.themoviedb.org/3/movie/';
+    dio.options.baseUrl = 'https://api.themoviedb.org/3/';
     dio.options.headers = {
       'Authorization':
           'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MGRhZmEyNDk3OWEzZTdlYTRlYjQ2NDgzMzFhYzRkYiIsInN1YiI6IjY2MzAwZWYyNjA5NzUwMDEyYmRhZmUxMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-eUkIgQTGm8I5n4rJhs04kAlQSo1jGTl_5uego7cfXI',

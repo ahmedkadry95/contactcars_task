@@ -3,6 +3,7 @@ import 'package:contactcars_task/core/shaerd_widgets/app_cashed_image.dart';
 import 'package:contactcars_task/core/theming/colors.dart';
 import 'package:contactcars_task/core/theming/styles.dart';
 import 'package:contactcars_task/core/utilis/spaces/spaces.dart';
+import 'package:contactcars_task/features/popular_movies/domain/entities/genre.dart';
 import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +11,13 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class MovieDetails extends StatelessWidget {
   late Movie movie;
+  late List<Genre> genre;
 
-  MovieDetails({super.key, required this.movie});
+  MovieDetails({
+    super.key,
+    required this.movie,
+    required this.genre,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +52,9 @@ class MovieDetails extends StatelessWidget {
                       ),
                       heightSpace(10.sp),
                       Text(
-                        movie.overview,
+                        movie.overview.isEmpty
+                            ? 'Overview Not Add'
+                            : movie.overview,
                         style: TextStyles.font13SemiBoldGrey,
                       ),
                       heightSpace(10.sp),
@@ -58,9 +66,27 @@ class MovieDetails extends StatelessWidget {
                               style: TextStyles.font15BoldMainColor,
                             ),
                             TextSpan(
-                              text: movie.releaseDate,
+                              text: movie.releaseDate.isEmpty
+                                  ? 'Release Date Not Add'
+                                  : movie.releaseDate,
                               style: TextStyles.font13SemiBoldBlack,
                             ),
+                          ],
+                        ),
+                      ),
+                      heightSpace(10.sp),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Movie Genres : ',
+                              style: TextStyles.font15BoldMainColor,
+                            ),
+                            if (genre.isNotEmpty)
+                              TextSpan(
+                                text: genre.map((e) => e.name).join(', '),
+                                style: TextStyles.font13SemiBoldBlack,
+                              ),
                           ],
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'package:contactcars_task/core/di/di.dart';
 import 'package:contactcars_task/core/routing/routs.dart';
+import 'package:contactcars_task/features/popular_movies/domain/entities/genre.dart';
 import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
 import 'package:contactcars_task/features/popular_movies/presentation/cubit/popular_movies_cubit.dart';
 import 'package:contactcars_task/features/popular_movies/presentation/pages/movie_details.dart';
@@ -10,7 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
   Route onGenerateRoute(RouteSettings settings) {
-    final arguments = settings.arguments;
+    final arguments = settings.arguments as Map<String, dynamic>?;
+    ;
     switch (settings.name) {
       case Routes.splash:
         return MaterialPageRoute(
@@ -26,7 +28,8 @@ class AppRouter {
       case Routes.movieDetails:
         return MaterialPageRoute(
           builder: (_) => MovieDetails(
-            movie: arguments as Movie,
+            movie: arguments!['movie'] as Movie,
+            genre: arguments['genre'] as List<Genre>,
           ),
         );
       default:

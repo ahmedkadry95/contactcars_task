@@ -44,7 +44,15 @@ class _PopularMoviesState extends State<PopularMovies> {
                   child: ListView.builder(
                     itemCount: state.movies.length,
                     itemBuilder: (context, index) {
-                      return MovieCard(movie: state.movies[index]);
+                      return MovieCard(
+                        movie: state.movies[index],
+                        onTap: () {
+                          cubit.navigateToMovieDetailsPage(
+                            context: context,
+                            movie: state.movies[index],
+                          );
+                        },
+                      );
                     },
                   ),
                 ),

@@ -2,7 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:contactcars_task/core/di/di.dart';
 import 'package:contactcars_task/core/networking/failure.dart';
 import 'package:contactcars_task/core/networking/network_checker.dart';
+import 'package:contactcars_task/core/routing/navigation.dart';
+import 'package:contactcars_task/core/routing/routs.dart';
+import 'package:contactcars_task/features/popular_movies/domain/entities/genre.dart';
 import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
+import 'package:contactcars_task/features/popular_movies/domain/use_cases/get_genres.dart';
 import 'package:contactcars_task/features/popular_movies/domain/use_cases/get_popular_movies_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +16,15 @@ part 'popular_movies_state.dart';
 
 class PopularMoviesCubit extends Cubit<PopularMoviesState> {
   PopularMoviesCubit() : super(PopularMoviesLoading());
-  int pageNumber = 0;
-  GetPopularMoviesUseCase getPopularMoviesUseCase =
-      di<GetPopularMoviesUseCase>();
   NetworkChecker networkChecker =
       NetworkCheckerImpl(connectionChecker: InternetConnectionChecker());
+
+  GetPopularMoviesUseCase getPopularMoviesUseCase =
+      di<GetPopularMoviesUseCase>();
+  GetGenreUseCase getGenreUseCase = di<GetGenreUseCase>();
+
+  late List<Genre> genres;
+  int pageNumber = 0;
 
   getPopularMovies({
     required int pageNumber,
@@ -35,9 +43,9 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
           emit(PopularMoviesLoadedFailed(message: getErrorMessage(failure)));
         }
       },
-      (movies) {
+      (movies) async {
         isNext ? this.pageNumber++ : this.pageNumber--;
-
+        await getGenres();
         emit(PopularMoviesLoadedSuccessfully(movies: movies));
       },
     );
@@ -57,5 +65,41 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
         ));
       }
     }
+  }
+
+  getGenres() async {
+    var response = await getGenreUseCase.call();
+    response.fold(
+      (failure) {
+        emit(PopularMoviesLoadedFailed(message: getErrorMessage(failure)));
+      },
+      (genres) {
+        this.genres = genres;
+      },
+    );
+  }
+
+  List<Genre> getMovieGenres({required List<int> genreIds}) {
+    print('genreIds');
+    print(genreIds);
+    List<Genre> genre = [];
+    for (var element in genreIds) {
+      genre.add(genres.where((element2) => element2.id == element).first);
+    }
+    return genre;
+  }
+
+  navigateToMovieDetailsPage({
+    required BuildContext context,
+    required Movie movie,
+  }) {
+
+    context.pushWithNamed(
+      Routes.movieDetails,
+      arguments: {
+        'movie': movie,
+        'genre': getMovieGenres(genreIds: movie.genreIds),
+      },
+    );
   }
 }
