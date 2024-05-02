@@ -87,4 +87,24 @@ class PopularMoviesRepositoriesImpl implements PopularMoviesRepositories {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<Genre>>> updateGenre() async {
+    try {
+      // Fetch genres from server
+      final genresFromServer = await remoteDataSourceImpl.getGenre();
+
+      // Cache the fetched genres in local database
+      await localDataSource.cashGenres(genresFromServer);
+
+      // Return the updated genres
+      return Right(genresFromServer);
+    } on ServerException {
+      // If there's a server exception, return a ServerFailure
+      return Left(ServerFailure());
+    } catch (e) {
+      // If there's any other exception, return a ServerFailure
+      return Left(ServerFailure());
+    }
+  }
 }

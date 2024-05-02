@@ -10,4 +10,6 @@ abstract class PopularMoviesRepositories {
   });
 
   Future<Either<Failure, List<Genre>>> getGenre();
+
+  Future<Either<Failure, List<Genre>>> updateGenre();
 }
