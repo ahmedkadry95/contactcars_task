@@ -35,6 +35,18 @@ class NoCashedPopularMoviesExist extends PopularMoviesState {
   final String message;
 
   NoCashedPopularMoviesExist({required this.message});
+
   @override
   List<Object?> get props => [];
+}
+
+/// this state will be emitted when data loaded successfully
+class UpdateGenres extends PopularMoviesState {
+  final List<Movie> movies;
+
+  UpdateGenres({required this.movies});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => movies;
 }

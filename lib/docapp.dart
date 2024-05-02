@@ -6,10 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/routing/routs.dart';
 
-class DocApp extends StatelessWidget {
+class TaskApp extends StatelessWidget {
   final AppRouter appRouter;
 
-  const DocApp({super.key, required this.appRouter});
+  const TaskApp({super.key, required this.appRouter});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class DocApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Contact Cars Task',
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
             elevation: 0,

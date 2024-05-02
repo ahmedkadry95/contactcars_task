@@ -8,6 +8,7 @@ import 'package:contactcars_task/features/popular_movies/domain/entities/genre.d
 import 'package:contactcars_task/features/popular_movies/domain/entities/movie.dart';
 import 'package:contactcars_task/features/popular_movies/domain/use_cases/get_genres.dart';
 import 'package:contactcars_task/features/popular_movies/domain/use_cases/get_popular_movies_use_case.dart';
+import 'package:contactcars_task/features/popular_movies/domain/use_cases/update_genres.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -21,11 +22,15 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
 
   GetPopularMoviesUseCase getPopularMoviesUseCase =
       di<GetPopularMoviesUseCase>();
+  UpdateGenreUseCase updateGenreUseCase = di<UpdateGenreUseCase>();
   GetGenreUseCase getGenreUseCase = di<GetGenreUseCase>();
 
   late List<Genre> genres;
+  bool disableScreen = false;
+  int selectedMovieIndex = 0;
   int pageNumber = 0;
 
+  // get popular movies
   getPopularMovies({
     required int pageNumber,
     bool isNext = true,
@@ -44,7 +49,11 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
         }
       },
       (movies) async {
-        isNext ? this.pageNumber++ : this.pageNumber--;
+        isNext
+            ? this.pageNumber++
+            : this.pageNumber == 1
+                ? this.pageNumber
+                : this.pageNumber--;
         await getGenres();
         emit(PopularMoviesLoadedSuccessfully(movies: movies));
       },
@@ -79,27 +88,77 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
     );
   }
 
-  List<Genre> getMovieGenres({required List<int> genreIds}) {
-    print('genreIds');
-    print(genreIds);
-    List<Genre> genre = [];
-    for (var element in genreIds) {
-      genre.add(genres.where((element2) => element2.id == element).first);
+  // update genres list
+  updateGenres(
+    BuildContext context, {
+    required List<Movie> movies,
+  }) async {
+    var response = await updateGenreUseCase.call();
+    response.fold(
+      (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Try again later!'),
+        ));
+      },
+      (genres) {
+        this.genres = genres;
+        emit(PopularMoviesLoadedSuccessfully(movies: movies));
+        navigateToMovieDetailsPage(
+          context: context,
+          movie: movies[selectedMovieIndex],
+          genres: genres,
+          movies: movies,
+        );
+      },
+    );
+  }
+
+  // check if all genres exist in the genres list
+  checkMovieGenres({
+    required List<int> genreIds,
+    required BuildContext context,
+    required List<Movie> movies,
+  }) async {
+    disableScreen = true;
+    emit(UpdateGenres(movies: movies));
+    List<Genre> genres = [];
+    bool isAllGenresExist = true;
+    // check if all genres exist in the genres list
+    for (var id in genreIds) {
+      try {
+        genres.add(this.genres.firstWhere((element) => element.id == id));
+      } catch (e) {
+        isAllGenresExist = false;
+      }
     }
-    return genre;
+    // if not all genres exist, update genres
+    if (!isAllGenresExist) {
+      await updateGenres(context, movies: movies);
+    } else {
+      navigateToMovieDetailsPage(
+        context: context,
+        movie: movies[selectedMovieIndex],
+        genres: genres,
+        movies: movies,
+      ); // if all genres exist, navigate to movie details page
+    }
   }
 
   navigateToMovieDetailsPage({
     required BuildContext context,
     required Movie movie,
+    required List<Genre> genres,
+    required List<Movie> movies,
   }) {
-
     context.pushWithNamed(
       Routes.movieDetails,
       arguments: {
         'movie': movie,
-        'genre': getMovieGenres(genreIds: movie.genreIds),
+        'genre': genres,
       },
-    );
+    ).then((value) {
+      disableScreen = false;
+      emit(PopularMoviesLoadedSuccessfully(movies: movies));
+    });
   }
 }

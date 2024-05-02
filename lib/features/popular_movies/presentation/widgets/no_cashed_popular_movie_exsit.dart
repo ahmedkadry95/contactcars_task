@@ -33,12 +33,13 @@ class NoCashedPopularMoviesExistWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (cubit.pageNumber > 1)
+              if (cubit.pageNumber >= 1)
                 ElevatedButton(
                   onPressed: () {
                     cubit.getPopularMovies(
                       isNext: false,
-                      pageNumber: cubit.pageNumber - 1,
+                      pageNumber:
+                          cubit.pageNumber == 1 ? 1 : cubit.pageNumber - 1,
                     );
                   },
                   style: mainAppButtonStyle(context: context),

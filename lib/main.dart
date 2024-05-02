@@ -10,7 +10,7 @@ void main() async {
   await openHiveBox();
   setupDependencyInjection();
   runApp(
-    DocApp(
+    TaskApp(
       appRouter: AppRouter(),
     ),
   );
