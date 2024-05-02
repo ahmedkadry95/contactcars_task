@@ -36,4 +36,16 @@ class TextStyles {
     color: ColorsManager.black,
     fontFamily: AppStrings.enFontFamily,
   );
+  static TextStyle font13BoldBlack = TextStyle(
+    fontSize: 13.sp,
+    fontWeight: FontWeightHelper.bold,
+    color: ColorsManager.black,
+    fontFamily: AppStrings.enFontFamily,
+  );
+  static TextStyle font10SemiBoldBlack = TextStyle(
+    fontSize: 10.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: ColorsManager.black,
+    fontFamily: AppStrings.enFontFamily,
+  );
 }

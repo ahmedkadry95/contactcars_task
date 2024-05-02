@@ -103,6 +103,7 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
           context: context,
           movie: movies[selectedMovieIndex],
           genres: genres,
+          movies: movies,
         );
       },
     );
@@ -121,7 +122,7 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
     // check if all genres exist in the genres list
     for (var id in genreIds) {
       try {
-        genres.add(genres.firstWhere((element) => element.id == id));
+        genres.add(this.genres.firstWhere((element) => element.id == id));
       } catch (e) {
         isAllGenresExist = false;
       }
@@ -134,6 +135,7 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
         context: context,
         movie: movies[selectedMovieIndex],
         genres: genres,
+        movies: movies,
       ); // if all genres exist, navigate to movie details page
     }
   }
@@ -142,6 +144,7 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
     required BuildContext context,
     required Movie movie,
     required List<Genre> genres,
+    required List<Movie> movies,
   }) {
     context.pushWithNamed(
       Routes.movieDetails,
@@ -149,6 +152,9 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
         'movie': movie,
         'genre': genres,
       },
-    );
+    ).then((value) {
+      disableScreen = false;
+      emit(PopularMoviesLoadedSuccessfully(movies: movies));
+    });
   }
 }
